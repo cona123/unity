@@ -9,6 +9,7 @@ public class head : MonoBehaviour {
 	private GameObject food;
 	private string direction;
 	private ArrayList bodys;
+	private int fangxiang = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -46,17 +47,25 @@ public class head : MonoBehaviour {
 		Vector3 oldposition = head1.transform.position;	
 
 		if (Input.GetKey(KeyCode.DownArrow)) {
-			direction = "down";
+			if (direction != "up") {
+				direction = "down";
+			}
 		}
 		if (Input.GetKeyDown(KeyCode.UpArrow)) {
-			direction = "up";
+			if (direction != "down") {
+				direction = "up";
+			}
 		}
-		if (Input.GetKey(KeyCode.LeftArrow)) {
-			direction = "left";
+		if (Input.GetKey (KeyCode.LeftArrow)) {
+			if (direction != "right") {
+				direction = "left";
 			}
-		if (Input.GetKey(KeyCode.RightArrow)) {
-			direction = "right";
+		}
+		if (Input.GetKey (KeyCode.RightArrow)) {
+			if (direction != "left") {
+				direction = "right";
 			}
+		}
 		switch (direction) {
 		case "down":
 			head1.transform.Translate (Vector3.back * Time.deltaTime * 20);
@@ -94,11 +103,17 @@ public class head : MonoBehaviour {
 			GameObject food = GameObject.FindGameObjectWithTag ("food");// (PrimitiveType.Cube);
 			food.transform.position = new Vector3 (Random.Range(-14,14), 0, Random.Range(1,29));
 			GameObject newbody = (GameObject)GameObject.CreatePrimitive (PrimitiveType.Cube);
+			newbody.tag = "body";
+			newbody.transform.localScale = new Vector3 (1, 1, 1);
 			bodys.Add (newbody);
 		} 
 
-		if(collider.gameObject.tag.CompareTo("wall")== 0) {
+		if(collider.gameObject.tag.CompareTo("wall")== 0 || collider.gameObject.tag.CompareTo("body")== 0) {
+			Debug.Log ("die");
 			Destroy(head1);
+			foreach (GameObject body in bodys) {
+				Destroy (body);
+			}
 		}
 	}
 }
